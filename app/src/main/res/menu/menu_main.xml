@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Options menu for CatalogActivityvity -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/new_note_item"
+        android:icon="@drawable/ic_note_add_white_24dp"
+        android:title="@string/new_note_item"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/delete_all_notes"
+        android:title="@string/delete_all_notes" />
+    <item
+        android:id="@+id/setting_item"
+        android:title="@string/setting" />
+</menu>
