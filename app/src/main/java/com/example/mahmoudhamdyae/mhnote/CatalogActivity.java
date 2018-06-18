@@ -76,6 +76,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         getLoaderManager().initLoader(NOTE_Loader, null, this);
     }
 
+
     /**
      * Helper method to delete all notes in the database.
      */
