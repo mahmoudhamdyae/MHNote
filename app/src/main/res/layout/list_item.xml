@@ -1,15 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Layout for a single list item in the list of pets -->
+<?xml version="1.0" encoding="utf-8"?><!-- Layout for a single list item in the list of notes -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/activity_margin">
+    android:layout_margin="@dimen/activity_margin"
+    android:elevation="6dp"
+    android:orientation="vertical">
 
-    <!-- todo no of lines -->
     <TextView
         android:id="@+id/title_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="2dp"
         android:fontFamily="sans-serif-medium"
         android:maxLines="1"
         android:textAppearance="?android:textAppearanceMedium"
@@ -19,6 +20,7 @@
         android:id="@+id/description_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="2dp"
         android:fontFamily="sans-serif"
         android:maxLines="2"
         android:textAppearance="?android:textAppearanceSmall"
