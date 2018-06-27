@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -38,6 +39,14 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(CatalogActivity.this, EditorActivity.class));
+            }
+        });
 
         // Find the ListView which will be populated with the note data
         ListView noteListView = findViewById(R.id.list);
@@ -112,8 +121,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             builder.setNegativeButton(R.string.delete_all_notes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     // User clicked the "Delete all notes" button
-                    int rowsDeleted = getContentResolver().delete(NoteEntry.CONTENT_URI, null, null);
-                    //toastShow(rowsDeleted);
+                    getContentResolver().delete(NoteEntry.CONTENT_URI, null, null);
                 }
             });
 
@@ -137,10 +145,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.setting_item:
-                startActivity(new Intent(this, SettingActivity.class));
-                return true;
-            case R.id.new_note_item:
-                startActivity(new Intent(this, EditorActivity.class));
+                startActivity(new Intent(CatalogActivity.this, SettingActivity.class));
                 return true;
             case R.id.delete_all_notes:
                 deleteAllNotes();
