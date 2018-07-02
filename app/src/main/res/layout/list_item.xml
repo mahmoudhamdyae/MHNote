@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/activity_margin"
     android:elevation="6dp"
+    android:background="@color/colorAccent"
     android:orientation="vertical">
 
     <TextView
