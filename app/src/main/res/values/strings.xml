@@ -31,4 +31,5 @@
     <string name="editor_delete_Note_successful">The note has deleted successfully</string>
     <string name="delete_all_dialog_msg">Are you sure you want to delete all notes ?</string>
     <string name="no_notes">There is no notes to delete</string>
+    <string name="editor_menu_color">Color</string>
 </resources>
