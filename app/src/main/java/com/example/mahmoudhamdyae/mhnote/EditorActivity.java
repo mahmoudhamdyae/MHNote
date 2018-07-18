@@ -128,11 +128,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Show a toast message depending on whether or not the insertion was successful.
             if (newUri == null) {
                 // If the new content URI is null, then there was an error with insertion.
-                Toast.makeText(this, R.string.editor_insert_note_failed,
+                Toast.makeText(this, R.string.editor_toast_insert_note_failed,
                         Toast.LENGTH_SHORT).show();
             } else {
                 // Otherwise, the insertion was successful and we can display a toast.
-                Toast.makeText(this, R.string.editor_insert_note_successful,
+                Toast.makeText(this, R.string.editor_toast_insert_note_successful,
                         Toast.LENGTH_SHORT).show();
             }
         } else {
@@ -146,11 +146,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 // Show a toast message depending on whether or not the update was successful.
                 if (rowsAffected == 0) {
                     // If no rows were affected, then there was an error with the update.
-                    Toast.makeText(this, getString(R.string.editor_update_note_failed),
+                    Toast.makeText(this, getString(R.string.editor_toast_update_note_failed),
                             Toast.LENGTH_SHORT).show();
                 } else {
                     // Otherwise, the update was successful and we can display a toast.
-                    Toast.makeText(this, getString(R.string.editor_update_note_successful),
+                    Toast.makeText(this, getString(R.string.editor_toast_update_note_successful),
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -316,9 +316,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Create an AlertDialog.Builder and set the message, and click listeners
         // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.unsaved_changes_dialog_msg);
-        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
-        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.dialog_msg_unsaved_changes);
+        builder.setPositiveButton(R.string.dialog_discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.dialog_keep_editing, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Keep editing" button, so dismiss the dialog
                 // and continue editing the Note.
@@ -337,14 +337,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Create an AlertDialog.Builder and set the message, and click listeners
         // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.delete_dialog_msg);
-        builder.setPositiveButton(R.string.delete_button, new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.dialog_msg_delete);
+        builder.setPositiveButton(R.string.dialog_delete_button, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Delete" button, so delete the Note.
                 deleteNote();
             }
         });
-        builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.dialog_cancel_button, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Cancel" button, so dismiss the dialog
                 // and continue editing the Note.
@@ -373,11 +373,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Show a toast message depending on whether or not the delete was successful.
             if (rowsDeleted == 0) {
                 // If no rows were deleted, then there was an error with the delete.
-                Toast.makeText(this, getString(R.string.editor_delete_Note_failed),
+                Toast.makeText(this, getString(R.string.editor_toast_delete_Note_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
                 // Otherwise, the delete was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_delete_Note_successful),
+                Toast.makeText(this, getString(R.string.editor_toast_delete_Note_successful),
                         Toast.LENGTH_SHORT).show();
             }
         }

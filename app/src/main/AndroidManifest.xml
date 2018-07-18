@@ -27,7 +27,7 @@
         </activity>
         <activity
             android:name=".SettingActivity"
-            android:label="@string/setting"
+            android:label="activity_setting"
             android:parentActivityName=".CatalogActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->

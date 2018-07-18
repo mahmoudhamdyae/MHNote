@@ -109,8 +109,8 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             // Create an AlertDialog.Builder and set the message, and click listeners
             // for the positive and negative buttons on the dialog.
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.delete_all_dialog_msg);
-            builder.setPositiveButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+            builder.setMessage(R.string.dialog_msg_delete_all);
+            builder.setPositiveButton(R.string.dialog_cancel_button, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     // User clicked the "Cancel" button, so dismiss the dialog
                     if (dialog != null) {
@@ -129,7 +129,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
         } else {
-            Toast.makeText(this, R.string.no_notes, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_no_notes, Toast.LENGTH_SHORT).show();
         }
 
         cursor.close();

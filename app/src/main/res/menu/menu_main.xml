@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/delete_all_notes"
-        android:title="@string/delete_all_notes" />
+        android:title="@string/action_delete_all_notes" />
     <item
         android:id="@+id/setting_item"
-        android:title="@string/setting" />
+        android:title="@string/action_setting" />
 </menu>
