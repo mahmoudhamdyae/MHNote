@@ -209,11 +209,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 builder.setTitle(R.string.dialog_color_title)
                         .setItems(R.array.colors_array, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                // The 'which' argument contains the index position
-                                // of the selected item
+                                switch (which) {
+                                    case 0:
+                                        color = "Red";
+                                    case 1:
+                                        color = "Green";
+                                    case 2:
+                                        color = "Blue";
+                                }
                             }
                         });
-                builder.create();
+                AlertDialog dialog = builder.create();
 
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
