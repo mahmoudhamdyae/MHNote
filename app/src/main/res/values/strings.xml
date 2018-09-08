@@ -31,6 +31,11 @@
     <string name="editor_toast_delete_Note_failed">Faied to delete the note</string>
     <string name="editor_toast_delete_Note_successful">The note has deleted successfully</string>
     <string name="dialog_msg_delete_all">Are you sure you want to delete all notes ?</string>
+    <string name="dialog_delete_all">Delete All</string>
     <string name="toast_no_notes">There is no notes to delete</string>
     <string name="action_change_color">Color</string>
+    <string name="dialog_color_title">Pick a color</string>
+    <string name="dialog_color_red">Red</string>
+    <string name="dialog_color_green">Green</string>
+    <string name="dialog_color_blue">Blue</string>
 </resources>

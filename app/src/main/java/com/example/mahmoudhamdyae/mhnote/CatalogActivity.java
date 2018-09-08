@@ -118,7 +118,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                     }
                 }
             });
-            builder.setNegativeButton(R.string.delete_all_notes, new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(R.string.dialog_delete_all, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     // User clicked the "Delete all notes" button
                     getContentResolver().delete(NoteEntry.CONTENT_URI, null, null);

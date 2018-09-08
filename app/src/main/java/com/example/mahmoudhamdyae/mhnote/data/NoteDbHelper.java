@@ -43,7 +43,10 @@ public class NoteDbHelper extends SQLiteOpenHelper {
         String SQL_CREATE_NOTES_TABLE = "CREATE TABLE " + NoteEntry.TABLE_NAME + " ("
                 + NoteEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + NoteEntry.COLUMN_NOTE_TITLE + " TEXT, "
-                + NoteEntry.COLUMN_NOTE_DESCRIPTION + " TEXT );";
+                + NoteEntry.COLUMN_NOTE_DESCRIPTION + " TEXT, "
+                + NoteEntry.COlUMN_NOTE_COLOR + " TEXT DEFAULT \"Red\", "
+                + NoteEntry.COLUMN_NOTE_TIME + " TEXT, "
+                + NoteEntry.COLUMN_NOTE_IMPORTANT + " INTEGER DEFAULT 0 CHECK (is_important IN (0, 1)));";
 
 
         // Execute the SQL statement

@@ -9,14 +9,17 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -48,6 +51,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      * Boolean flag that keeps track of whether the Note has been edited (true) or not (false)
      */
     private boolean mNoteHasChanged = false;
+    /**
+     * String for note color
+     */
+    String color = "Red";
 
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
@@ -198,7 +205,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 return true;
             // Respond to a click on "Color" menu option
             case R.id.action_color:
-                // todo color action
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.dialog_color_title)
+                        .setItems(R.array.colors_array, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // The 'which' argument contains the index position
+                                // of the selected item
+                            }
+                        });
+                builder.create();
+
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:

@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
+import com.example.mahmoudhamdyae.mhnote.data.NoteContract.NoteEntry;
+
 /**
  * Created by mahmoudhamdyae on 3/3/18.
  */
@@ -89,7 +91,7 @@ public class NoteProvider extends ContentProvider {
                 // For the NOTES code, query the NOTES table directly with the given
                 // projection, selection, selection arguments, and sort order. The cursor
                 // could contain multiple rows of the NOTES table.
-                cursor = database.query(NoteContract.NoteEntry.TABLE_NAME, projection, selection, selectionArgs,
+                cursor = database.query(NoteEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             case NOTE_ID:
@@ -101,12 +103,12 @@ public class NoteProvider extends ContentProvider {
                 // For every "?" in the selection, we need to have an element in the selection
                 // arguments that will fill in the "?". Since we have 1 question mark in the
                 // selection, we have 1 String in the selection arguments' String array.
-                selection = NoteContract.NoteEntry._ID + "=?";
+                selection = NoteEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 // This will perform a query on the NOTES table where the _id equals 3 to return a
                 // Cursor containing that row of the table.
-                cursor = database.query(NoteContract.NoteEntry.TABLE_NAME, projection, selection, selectionArgs,
+                cursor = database.query(NoteEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             default:
@@ -145,11 +147,11 @@ public class NoteProvider extends ContentProvider {
         // Sanity checking the attributes in ContentValues
         // Check that the title is not null
         /* Sanity checking is in insert and update only */
-        String title = values.getAsString(NoteContract.NoteEntry.COLUMN_NOTE_TITLE);
+        String title = values.getAsString(NoteEntry.COLUMN_NOTE_TITLE);
         if (title == null)
             throw new IllegalArgumentException("Note requires a name");
 
-        String description = values.getAsString(NoteContract.NoteEntry.COLUMN_NOTE_DESCRIPTION);
+        String description = values.getAsString(NoteEntry.COLUMN_NOTE_DESCRIPTION);
         if (description == null)
             throw new IllegalArgumentException("Note requires s description");
 
@@ -157,7 +159,7 @@ public class NoteProvider extends ContentProvider {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
         // Insert the new Note with the given values
-        long id = database.insert(NoteContract.NoteEntry.TABLE_NAME, null, values);
+        long id = database.insert(NoteEntry.TABLE_NAME, null, values);
 
         // Notify all listeners that the data has changed for the Note content URI
         // uri: content://com.example.android.NOTES/NOTES
@@ -180,7 +182,7 @@ public class NoteProvider extends ContentProvider {
                 // For the NOTE_ID code, extract out the ID from the URI,
                 // so we know which row to update. Selection will be "_id=?" and selection
                 // arguments will be a String array containing the actual ID.
-                selection = NoteContract.NoteEntry._ID + "=?";
+                selection = NoteEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateNote(uri, contentValues, selection, selectionArgs);
             default:
@@ -203,8 +205,8 @@ public class NoteProvider extends ContentProvider {
 
         // If the {@link NoteEntry#COLUMN_Note_Title} key is present,
         // check that the name value is not null.
-        if (values.containsKey(NoteContract.NoteEntry.COLUMN_NOTE_TITLE)) {
-            String title = values.getAsString(NoteContract.NoteEntry.COLUMN_NOTE_TITLE);
+        if (values.containsKey(NoteEntry.COLUMN_NOTE_TITLE)) {
+            String title = values.getAsString(NoteEntry.COLUMN_NOTE_TITLE);
             if (title == null) {
                 throw new IllegalArgumentException("Note requires a name");
             }
@@ -212,8 +214,8 @@ public class NoteProvider extends ContentProvider {
 
         // If the {@link NoteEntry#COLUMN_Note_GENDER} key is present,
         // check that the gender value is valid.
-        if (values.containsKey(NoteContract.NoteEntry.COLUMN_NOTE_TITLE)) {
-            String description = values.getAsString(NoteContract.NoteEntry.COLUMN_NOTE_DESCRIPTION);
+        if (values.containsKey(NoteEntry.COLUMN_NOTE_TITLE)) {
+            String description = values.getAsString(NoteEntry.COLUMN_NOTE_DESCRIPTION);
             if (description == null) {
                 throw new IllegalArgumentException("Note requires a description");
             }
@@ -228,10 +230,10 @@ public class NoteProvider extends ContentProvider {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
         /*// Returns the number of database rows affected by the update statement
-        return database.update(NoteContract.NoteEntry.TABLE_NAME, values, selection, selectionArgs);*/
+        return database.update(NoteEntry.TABLE_NAME, values, selection, selectionArgs);*/
 
         // Perform the update on the database and get the number of rows affected
-        int rowsUpdated = database.update(NoteContract.NoteEntry.TABLE_NAME, values, selection, selectionArgs);
+        int rowsUpdated = database.update(NoteEntry.TABLE_NAME, values, selection, selectionArgs);
 
         // If 1 or more rows were updated, then notify all listeners that the data at the
         // given URI has changed
@@ -258,15 +260,15 @@ public class NoteProvider extends ContentProvider {
         switch (match) {
             case NOTES:
                 // Delete all rows that match the selection and selection args
-                /*return database.delete(NoteContract.NoteEntry.TABLE_NAME, selection, selectionArgs);*/
-                rowsDeleted = database.delete(NoteContract.NoteEntry.TABLE_NAME, selection, selectionArgs);
+                /*return database.delete(NoteEntry.TABLE_NAME, selection, selectionArgs);*/
+                rowsDeleted = database.delete(NoteEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case NOTE_ID:
                 // Delete a single row given by the ID in the URI
-                selection = NoteContract.NoteEntry._ID + "=?";
+                selection = NoteEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                /*return database.delete(NoteContract.NoteEntry.TABLE_NAME, selection, selectionArgs);*/
-                rowsDeleted = database.delete(NoteContract.NoteEntry.TABLE_NAME, selection, selectionArgs);
+                /*return database.delete(NoteEntry.TABLE_NAME, selection, selectionArgs);*/
+                rowsDeleted = database.delete(NoteEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
@@ -290,9 +292,9 @@ public class NoteProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case NOTES:
-                return NoteContract.NoteEntry.CONTENT_LIST_TYPE;
+                return NoteEntry.CONTENT_LIST_TYPE;
             case NOTE_ID:
-                return NoteContract.NoteEntry.CONTENT_ITEM_TYPE;
+                return NoteEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }

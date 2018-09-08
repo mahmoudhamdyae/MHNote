@@ -8,6 +8,8 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import org.w3c.dom.Text;
+
 /**
  * API Contract for the Notes app.
  */
@@ -81,10 +83,31 @@ public class NoteContract {
         public final static String COLUMN_NOTE_TITLE = "title";
 
         /**
-         * Name of the pet.
+         * Name of the note.
          * <p>
          * Type: TEXT
          */
         public final static String COLUMN_NOTE_DESCRIPTION = "name";
+
+        /**
+         * Color of the note.
+         * <p>
+         * Type: Text
+         */
+        public final static String COlUMN_NOTE_COLOR = "color";
+
+        /**
+         * Alert time of the note.
+         * <p>
+         * Type: Date
+         */
+        public final static String COLUMN_NOTE_TIME = "time";
+
+        /**
+         * Is the note important.
+         * <p>
+         * Type: Integer (1 important_0 not important)
+         */
+        public final static String COLUMN_NOTE_IMPORTANT = "is_important";
     }
 }

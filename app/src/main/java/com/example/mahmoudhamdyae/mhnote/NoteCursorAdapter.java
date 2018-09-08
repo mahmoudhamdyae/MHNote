@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import com.example.mahmoudhamdyae.mhnote.data.NoteContract;
+import com.example.mahmoudhamdyae.mhnote.data.NoteContract.NoteEntry;
 
 /**
  * {@link NoteCursorAdapter} is an adapter for a list or grid view
@@ -59,8 +59,8 @@ public class NoteCursorAdapter extends CursorAdapter {
         TextView descriptionTextView = (TextView) view.findViewById(R.id.description_list);
 
         // Find the columns of Note attributes that we're interested in
-        int titleColumnIndex = cursor.getColumnIndex(NoteContract.NoteEntry.COLUMN_NOTE_TITLE);
-        int descriptionColumnIndex = cursor.getColumnIndex(NoteContract.NoteEntry.COLUMN_NOTE_DESCRIPTION);
+        int titleColumnIndex = cursor.getColumnIndex(NoteEntry.COLUMN_NOTE_TITLE);
+        int descriptionColumnIndex = cursor.getColumnIndex(NoteEntry.COLUMN_NOTE_DESCRIPTION);
 
         // Read the Note attributes from the Cursor for the current Note
         String NoteTitle = cursor.getString(titleColumnIndex);

@@ -8,4 +8,13 @@
 
     <!-- Accent color for UI controls like checkboxes and text fields -->
     <color name="colorAccent">#F0514B</color>
+
+    <!-- The color of the red circle -->
+    <color name="red">#ff0000</color>
+
+    <!-- The color of the blue circle -->
+    <color name="blue">#0000FF</color>
+
+    <!-- The color of the green circle -->
+    <color name="green">#008000</color>
 </resources>
