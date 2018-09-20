@@ -94,6 +94,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 NoteEntry._ID,
                 NoteEntry.COLUMN_NOTE_TITLE,
                 NoteEntry.COLUMN_NOTE_DESCRIPTION,
+                NoteEntry.COlUMN_NOTE_COLOR
         };
 
         // Perform a query on the provider using the ContentResolver.
@@ -160,7 +161,9 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         String[] projection = {
                 NoteEntry._ID,
                 NoteEntry.COLUMN_NOTE_TITLE,
-                NoteEntry.COLUMN_NOTE_DESCRIPTION};
+                NoteEntry.COLUMN_NOTE_DESCRIPTION,
+                NoteEntry.COlUMN_NOTE_COLOR
+        };
 
         // This loader will execute the ContentProvider a query method on a background thread
         return new CursorLoader(this,   // Parent activity context

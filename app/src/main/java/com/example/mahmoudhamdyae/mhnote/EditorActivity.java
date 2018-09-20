@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NavUtils;
@@ -21,6 +22,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.example.mahmoudhamdyae.mhnote.data.NoteContract.NoteEntry;
@@ -48,13 +51,39 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mDescriptionEditText;
 
     /**
+     * ScrollView field for the color of the note
+     */
+    private ScrollView scrollView;
+
+    /**
      * Boolean flag that keeps track of whether the Note has been edited (true) or not (false)
      */
     private boolean mNoteHasChanged = false;
+
+    /**
+     * Constant for red color
+     */
+    private final String COLOR_RED = "#ff0000";
+
+    /**
+     * Constant for blue color
+     */
+    private final String COLOR_BLUE = "#0000FF";
+
+    /**
+     * Constant for green color
+     */
+    private final String COLOR_GREEN = "#008000";
+
+    /**
+     * Constant for default color white
+     */
+    private final String COLOR_WHITE = "#000000";
+
     /**
      * String for note color
      */
-    String color = "Red";
+    String color = COLOR_RED;
 
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
@@ -95,6 +124,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mTitleEditText = (EditText) findViewById(R.id.edit_title);
         mDescriptionEditText = (EditText) findViewById(R.id.edit_description);
 
+        scrollView = (ScrollView) findViewById(R.id.edit_scroll);
+
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes
         // or not, if the user tries to leave the editor without saving.
@@ -125,6 +156,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         ContentValues values = new ContentValues();
         values.put(NoteEntry.COLUMN_NOTE_TITLE, titleString);
         values.put(NoteEntry.COLUMN_NOTE_DESCRIPTION, descriptionString);
+        values.put(NoteEntry.COlUMN_NOTE_COLOR, color);
 
         // Determine if this is a new or existing note by checking if mCurrentNoteUri is null or not
         if (mCurrentNoteUri == null) {
@@ -211,17 +243,24 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0:
-                                        color = "Red";
+                                        color = COLOR_RED;
+                                        mNoteHasChanged = true;
+                                        break;
                                     case 1:
-                                        color = "Green";
+                                        color = COLOR_BLUE;
+                                        mNoteHasChanged = true;
+                                        break;
                                     case 2:
-                                        color = "Blue";
+                                        color = COLOR_GREEN;
+                                        mNoteHasChanged = true;
+                                        break;
                                 }
                             }
                         });
                 AlertDialog dialog = builder.create();
-
+                dialog.show();
                 return true;
+
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
                 // If the Note hasn't changed, continue with navigating up to parent activity
@@ -283,7 +322,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String[] projection = {
                 NoteEntry._ID,
                 NoteEntry.COLUMN_NOTE_TITLE,
-                NoteEntry.COLUMN_NOTE_DESCRIPTION
+                NoteEntry.COLUMN_NOTE_DESCRIPTION,
+                NoteEntry.COlUMN_NOTE_COLOR
         };
 
         // This loader will execute the ContentProvider's query method on a background thread
@@ -308,14 +348,31 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Find the columns of Note attributes that we're interested in
             int titleColumnIndex = cursor.getColumnIndex(NoteEntry.COLUMN_NOTE_TITLE);
             int descriptionColumnIndex = cursor.getColumnIndex(NoteEntry.COLUMN_NOTE_DESCRIPTION);
+            int colorColumnIndex = cursor.getColumnIndex(NoteEntry.COlUMN_NOTE_COLOR);
 
             // Extract out the value from the Cursor for the given column index
-            String name = cursor.getString(titleColumnIndex);
-            String breed = cursor.getString(descriptionColumnIndex);
+            String title = cursor.getString(titleColumnIndex);
+            String description = cursor.getString(descriptionColumnIndex);
+            String color = cursor.getString(colorColumnIndex);
 
             // Update the views on the screen with the values from the database
-            mTitleEditText.setText(name);
-            mDescriptionEditText.setText(breed);
+            mTitleEditText.setText(title);
+            mDescriptionEditText.setText(description);
+            switch (color){
+                case COLOR_RED:
+                    scrollView.setBackgroundColor(Color.RED);
+
+                    break;
+                case COLOR_BLUE:
+                    scrollView.setBackgroundColor(Color.BLUE);
+                    break;
+                case COLOR_GREEN:
+                    scrollView.setBackgroundColor(Color.GREEN);
+                    break;
+                default:
+                    scrollView.setBackgroundColor(Color.WHITE);
+                    break;
+            }
         }
     }
 
@@ -324,6 +381,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // If the loader is invalidated, clear out all the data from the input fields.
         mTitleEditText.setText("");
         mDescriptionEditText.setText("");
+        scrollView.setBackgroundColor(Color.WHITE);
     }
 
     /**

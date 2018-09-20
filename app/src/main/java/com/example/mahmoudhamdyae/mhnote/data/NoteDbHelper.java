@@ -44,7 +44,7 @@ public class NoteDbHelper extends SQLiteOpenHelper {
                 + NoteEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + NoteEntry.COLUMN_NOTE_TITLE + " TEXT, "
                 + NoteEntry.COLUMN_NOTE_DESCRIPTION + " TEXT, "
-                + NoteEntry.COlUMN_NOTE_COLOR + " TEXT DEFAULT \"Red\", "
+                + NoteEntry.COlUMN_NOTE_COLOR + " TEXT DEFAULT \"COLOR_WHITE\", "
                 + NoteEntry.COLUMN_NOTE_TIME + " TEXT, "
                 + NoteEntry.COLUMN_NOTE_IMPORTANT + " INTEGER DEFAULT 0 CHECK (is_important IN (0, 1)));";
 
