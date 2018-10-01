@@ -10,19 +10,15 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -74,11 +70,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      * Constant for green color
      */
     private final String COLOR_GREEN = "#008000";
-
-    /**
-     * Constant for default color white
-     */
-    private final String COLOR_WHITE = "#000000";
 
     /**
      * String for note color
@@ -361,7 +352,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             switch (color){
                 case COLOR_RED:
                     scrollView.setBackgroundColor(Color.RED);
-
                     break;
                 case COLOR_BLUE:
                     scrollView.setBackgroundColor(Color.BLUE);

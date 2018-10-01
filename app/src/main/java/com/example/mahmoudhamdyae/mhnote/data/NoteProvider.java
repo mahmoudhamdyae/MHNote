@@ -162,7 +162,7 @@ public class NoteProvider extends ContentProvider {
         long id = database.insert(NoteEntry.TABLE_NAME, null, values);
 
         // Notify all listeners that the data has changed for the Note content URI
-        // uri: content://com.example.android.NOTES/NOTES
+        // uri: content://com.example.mahmoudhamdyae.mhnote.NOTES/NOTES
         getContext().getContentResolver().notifyChange(uri, null);
 
         // return the new URI with the ID (of the newly inserted row) appended to the end of it

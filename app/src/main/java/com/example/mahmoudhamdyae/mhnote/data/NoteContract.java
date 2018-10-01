@@ -109,5 +109,12 @@ public class NoteContract {
          * Type: Integer (1 important_0 not important)
          */
         public final static String COLUMN_NOTE_IMPORTANT = "is_important";
+
+        /**
+         * Label of the note
+         * <p>
+         * Type: TEXT
+         */
+        public final static String COLUMN_NOTE_LABEL = "label";
     }
 }

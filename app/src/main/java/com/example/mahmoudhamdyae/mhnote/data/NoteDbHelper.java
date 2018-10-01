@@ -46,7 +46,8 @@ public class NoteDbHelper extends SQLiteOpenHelper {
                 + NoteEntry.COLUMN_NOTE_DESCRIPTION + " TEXT, "
                 + NoteEntry.COlUMN_NOTE_COLOR + " TEXT DEFAULT \"COLOR_WHITE\", "
                 + NoteEntry.COLUMN_NOTE_TIME + " TEXT, "
-                + NoteEntry.COLUMN_NOTE_IMPORTANT + " INTEGER DEFAULT 0 CHECK (is_important IN (0, 1)));";
+                + NoteEntry.COLUMN_NOTE_IMPORTANT + " INTEGER DEFAULT 0 CHECK (is_important IN (0, 1)), "
+                + NoteEntry.COLUMN_NOTE_LABEL + "TEXT)";
 
 
         // Execute the SQL statement
