@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mahmoudhamdyae.mhnote">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_note_add_black_24dp"
@@ -40,6 +42,13 @@
             android:name=".data.NoteProvider"
             android:authorities="com.example.mahmoudhamdyae.mhnote"
             android:exported="false" />
+
+        <!--<receiver android:name=".SampleBootReceiver"-->
+            <!--android:enabled="false">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED"></action>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
     </application>
 
 </manifest>

@@ -252,6 +252,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 dialog.show();
                 return true;
 
+            // Respond to a click on the "Alarm" menu option
+            case R.id.action_alarm:
+
+                return true;
+
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
                 // If the Note hasn't changed, continue with navigating up to parent activity

@@ -26,6 +26,7 @@
     <string name="confirm_delete_all_apps">Delete all apps ?</string>
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
+    <string name="action_alarm">Add Alarm</string>
     <string name="dialog_msg_delete">Are you sure you want to delete this note ?</string>
     <string name="dialog_delete_button">Delete</string>
     <string name="editor_toast_delete_Note_failed">Faied to delete the note</string>
