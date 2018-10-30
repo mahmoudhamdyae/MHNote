@@ -4,12 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.mahmoudhamdyae.mhnote.data.NoteContract.NoteEntry;
@@ -58,9 +56,9 @@ public class NoteCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         // Find individual views that we want to modify in the list item layout
-        TextView titleTextView = (TextView) view.findViewById(R.id.title_list);
-        TextView descriptionTextView = (TextView) view.findViewById(R.id.description_list);
-        CardView cardView = (CardView) view.findViewById(R.id.card_view);
+        TextView titleTextView = view.findViewById(R.id.title_list);
+        TextView descriptionTextView = view.findViewById(R.id.description_list);
+        CardView cardView = view.findViewById(R.id.card_view);
 
         // Find the columns of Note attributes that we're interested in
         int titleColumnIndex = cursor.getColumnIndex(NoteEntry.COLUMN_NOTE_TITLE);

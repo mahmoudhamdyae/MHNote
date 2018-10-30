@@ -112,10 +112,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             getLoaderManager().initLoader(EXISTING_NOTE_LOADER, null, this);
         }
         // Find all relevant views that we will need to read user input from
-        mTitleEditText = (EditText) findViewById(R.id.edit_title);
-        mDescriptionEditText = (EditText) findViewById(R.id.edit_description);
+        mTitleEditText = findViewById(R.id.edit_title);
+        mDescriptionEditText = findViewById(R.id.edit_description);
 
-        scrollView = (ScrollView) findViewById(R.id.edit_scroll);
+        scrollView = findViewById(R.id.edit_scroll);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes
@@ -251,11 +251,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 return true;
-
             // Respond to a click on the "Alarm" menu option
-            case R.id.action_alarm:
+//            case R.id.action_alarm:
+                // todo alarm
 
-                return true;
+//                return true;
 
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:

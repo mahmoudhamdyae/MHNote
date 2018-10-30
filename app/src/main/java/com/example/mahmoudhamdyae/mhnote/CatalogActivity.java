@@ -40,7 +40,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
