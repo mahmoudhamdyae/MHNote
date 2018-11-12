@@ -1,13 +1,8 @@
 package com.example.mahmoudhamdyae.mhnote;
 
 import android.app.AlertDialog;
-import android.app.LoaderManager;
-import android.content.ContentValues;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.NavUtils;
@@ -20,16 +15,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
-import com.example.mahmoudhamdyae.mhnote.data.NoteContract.NoteEntry;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-
-    /**
-     * Identifier for the note data loader
-     */
-    private static final int EXISTING_NOTE_LOADER = 0;
+public class EditorActivity extends AppCompatActivity {
 
     /**
      * Content URI for the existing note (null if it's a new note)
@@ -76,6 +66,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     String color = COLOR_RED;
 
+    // Firebase instance variables
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mNoteDatabaseReference;
+
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
      * the view, and we change the mNoteHasChanged boolean to true.
@@ -106,10 +100,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         } else {
             // Otherwise this is an existing note, so change app bar to say "Edit Note"
             setTitle(getString(R.string.editor_activity_title_edit_note));
-
-            // Initialize a loader to read the note data from the database
-            // and display the current values in the editor
-            getLoaderManager().initLoader(EXISTING_NOTE_LOADER, null, this);
         }
         // Find all relevant views that we will need to read user input from
         mTitleEditText = findViewById(R.id.edit_title);
@@ -122,6 +112,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // or not, if the user tries to leave the editor without saving.
         mTitleEditText.setOnTouchListener(mTouchListener);
         mDescriptionEditText.setOnTouchListener(mTouchListener);
+
+        // Initialize Firebase components
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+
+        mNoteDatabaseReference = mFirebaseDatabase.getReference().child("notes");
     }
 
     /**
@@ -142,47 +137,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return;
         }
 
-        // Create a ContentValues object where column names are the keys,
-        // and Note attributes from the editor are the values.
-        ContentValues values = new ContentValues();
-        values.put(NoteEntry.COLUMN_NOTE_TITLE, titleString);
-        values.put(NoteEntry.COLUMN_NOTE_DESCRIPTION, descriptionString);
-        values.put(NoteEntry.COlUMN_NOTE_COLOR, color);
-
         // Determine if this is a new or existing note by checking if mCurrentNoteUri is null or not
         if (mCurrentNoteUri == null) {
             // This is a NEW Note, so insert a new Note into the provider,
             // returning the content URI for the new Note.
-            Uri newUri = getContentResolver().insert(NoteEntry.CONTENT_URI, values);
-
-            // Show a toast message depending on whether or not the insertion was successful.
-            if (newUri == null) {
-                // If the new content URI is null, then there was an error with insertion.
-                Toast.makeText(this, R.string.editor_toast_insert_note_failed,
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                // Otherwise, the insertion was successful and we can display a toast.
-                Toast.makeText(this, R.string.editor_toast_insert_note_successful,
-                        Toast.LENGTH_SHORT).show();
-            }
+            Note note = new Note(mTitleEditText.getText().toString(), mDescriptionEditText.getText().toString(), color, "", false, "");
+            mNoteDatabaseReference.push().setValue(note);
         } else {
             if (mNoteHasChanged) {
-                // Otherwise this is an EXISTING note, so update the Note with content URI: mCurrentNoteUri
-                // and pass in the new ContentValues. Pass in null for the selection and selection args
-                // because mCurrentNoteUri will already identify the correct row in the database that
-                // we want to modify.
-                int rowsAffected = getContentResolver().update(mCurrentNoteUri, values, null, null);
-
-                // Show a toast message depending on whether or not the update was successful.
-                if (rowsAffected == 0) {
-                    // If no rows were affected, then there was an error with the update.
-                    Toast.makeText(this, getString(R.string.editor_toast_update_note_failed),
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    // Otherwise, the update was successful and we can display a toast.
-                    Toast.makeText(this, getString(R.string.editor_toast_update_note_successful),
-                            Toast.LENGTH_SHORT).show();
-                }
+                // Otherwise this is an EXISTING note, so update the Note
+                // todo update firebase
             }
         }
     }
@@ -214,6 +178,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     public boolean onOptionsItemSelected(MenuItem item) {
         // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
+
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
                 // Save Note to database
@@ -221,41 +186,22 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 // Exit activity
                 finish();
                 return true;
+
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
                 // Pop up confirmation dialog for deletion
                 showDeleteConfirmationDialog();
                 return true;
+
             // Respond to a click on "Color" menu option
             case R.id.action_color:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.dialog_color_title)
-                        .setItems(R.array.colors_array, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case 0:
-                                        color = COLOR_RED;
-                                        mNoteHasChanged = true;
-                                        break;
-                                    case 1:
-                                        color = COLOR_BLUE;
-                                        mNoteHasChanged = true;
-                                        break;
-                                    case 2:
-                                        color = COLOR_GREEN;
-                                        mNoteHasChanged = true;
-                                        break;
-                                }
-                            }
-                        });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                chooseColor();
                 return true;
-            // Respond to a click on the "Alarm" menu option
-//            case R.id.action_alarm:
-                // todo alarm
 
-//                return true;
+            // Respond to a click on the "Alarm" menu option
+            case R.id.action_alarm:
+                alarmSet();
+                return true;
 
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
@@ -311,72 +257,42 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        // Since the editor shows all Note attributes, define a projection that contains
-        // all columns from the Note table
-        String[] projection = {
-                NoteEntry._ID,
-                NoteEntry.COLUMN_NOTE_TITLE,
-                NoteEntry.COLUMN_NOTE_DESCRIPTION,
-                NoteEntry.COlUMN_NOTE_COLOR
-        };
-
-        // This loader will execute the ContentProvider's query method on a background thread
-        return new CursorLoader(this,   // Parent activity context
-                mCurrentNoteUri,                 // Query the content URI for the current Note
-                projection,                     // Columns to include in the resulting Cursor
-                null,                  // No selection clause
-                null,               // No selection arguments
-                null);                 // Default sort order
+    /**
+     * Show a dialog to choose color of the note
+     */
+    private void chooseColor(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.dialog_color_title)
+                .setItems(R.array.colors_array, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                color = COLOR_RED;
+                                scrollView.setBackgroundColor(Color.RED);
+                                mNoteHasChanged = true;
+                                break;
+                            case 1:
+                                color = COLOR_BLUE;
+                                scrollView.setBackgroundColor(Color.BLUE);
+                                mNoteHasChanged = true;
+                                break;
+                            case 2:
+                                color = COLOR_GREEN;
+                                scrollView.setBackgroundColor(Color.GREEN);
+                                mNoteHasChanged = true;
+                                break;
+                        }
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        // Bail early if the cursor is null or there is less than 1 row in the cursor
-        if (cursor == null || cursor.getCount() < 1) {
-            return;
-        }
-
-        // Proceed with moving to the first row of the cursor and reading data from it
-        // (This should be the only row in the cursor)
-        if (cursor.moveToFirst()) {
-            // Find the columns of Note attributes that we're interested in
-            int titleColumnIndex = cursor.getColumnIndex(NoteEntry.COLUMN_NOTE_TITLE);
-            int descriptionColumnIndex = cursor.getColumnIndex(NoteEntry.COLUMN_NOTE_DESCRIPTION);
-            int colorColumnIndex = cursor.getColumnIndex(NoteEntry.COlUMN_NOTE_COLOR);
-
-            // Extract out the value from the Cursor for the given column index
-            String title = cursor.getString(titleColumnIndex);
-            String description = cursor.getString(descriptionColumnIndex);
-            String color = cursor.getString(colorColumnIndex);
-
-            // Update the views on the screen with the values from the database
-            mTitleEditText.setText(title);
-            mDescriptionEditText.setText(description);
-            switch (color){
-                case COLOR_RED:
-                    scrollView.setBackgroundColor(Color.RED);
-                    break;
-                case COLOR_BLUE:
-                    scrollView.setBackgroundColor(Color.BLUE);
-                    break;
-                case COLOR_GREEN:
-                    scrollView.setBackgroundColor(Color.GREEN);
-                    break;
-                default:
-                    scrollView.setBackgroundColor(Color.WHITE);
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        // If the loader is invalidated, clear out all the data from the input fields.
-        mTitleEditText.setText("");
-        mDescriptionEditText.setText("");
-        scrollView.setBackgroundColor(Color.WHITE);
+    /**
+     * Set alarm
+     */
+    private void alarmSet(){
+        // todo alarm
     }
 
     /**
@@ -443,18 +359,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Call the ContentResolver to delete the Note at the given content URI.
             // Pass in null for the selection and selection args because the mCurrentNoteUri
             // content URI already identifies the Note that we want.
-            int rowsDeleted = getContentResolver().delete(mCurrentNoteUri, null, null);
-
-            // Show a toast message depending on whether or not the delete was successful.
-            if (rowsDeleted == 0) {
-                // If no rows were deleted, then there was an error with the delete.
-                Toast.makeText(this, getString(R.string.editor_toast_delete_Note_failed),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                // Otherwise, the delete was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_toast_delete_Note_successful),
-                        Toast.LENGTH_SHORT).show();
-            }
+//            int rowsDeleted = getContentResolver().delete(mCurrentNoteUri, null, null);
         }
 
         // Close the activity

@@ -38,11 +38,6 @@
                 android:value=".CatalogActivity" />
         </activity>
 
-        <provider
-            android:name=".data.NoteProvider"
-            android:authorities="com.example.mahmoudhamdyae.mhnote"
-            android:exported="false" />
-
         <!--<receiver android:name=".SampleBootReceiver"-->
             <!--android:enabled="false">-->
             <!--<intent-filter>-->
