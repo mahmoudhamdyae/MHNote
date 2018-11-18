@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +42,7 @@ public class CatalogActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
 
@@ -155,7 +155,10 @@ public class CatalogActivity extends AppCompatActivity {
                 }
 
                 public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {}
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                    Note note = dataSnapshot.getValue(Note.class);
+                    mNoteAdapter.remove(note);
+                }
                 public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {}
                 public void onCancelled(@NonNull DatabaseError databaseError) {}
             };
@@ -170,7 +173,7 @@ public class CatalogActivity extends AppCompatActivity {
         }
     }
 
-    // todo don not want this
+    // todo do not want this
     /*@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

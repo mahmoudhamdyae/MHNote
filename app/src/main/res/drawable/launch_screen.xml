@@ -1,0 +1,15 @@
+<!-- The android:opacity=”opaque” line — this is critical in preventing a flash of black as your theme transitions. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
+
+    <item android:drawable="@android:color/holo_red_light" />
+
+    <item>
+
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/ic_note_add_black_24dp" />
+
+    </item>
+
+</layer-list>
