@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +31,8 @@ import java.util.List;
 public class CatalogActivity extends AppCompatActivity {
 
     private NoteAdapter mNoteAdapter;
+    private ListView mNoteListView;
+    private Note mNote;
 
     public static final int RC_SIGN_IN = 1;
 
@@ -55,7 +58,7 @@ public class CatalogActivity extends AppCompatActivity {
         });
 
         // Find the ListView which will be populated with the note data
-        ListView mNoteListView = findViewById(R.id.list);
+        mNoteListView = findViewById(R.id.list);
 
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
         View emptyView = findViewById(R.id.empty_view);
@@ -110,9 +113,9 @@ public class CatalogActivity extends AppCompatActivity {
                                     .setIsSmartLockEnabled(false)
                                     .setAvailableProviders(Arrays.asList(
                                             new AuthUI.IdpConfig.EmailBuilder().build(),
-                                            new AuthUI.IdpConfig.GoogleBuilder().build())/*,
+                                            new AuthUI.IdpConfig.GoogleBuilder().build(),
                                             new AuthUI.IdpConfig.FacebookBuilder().build(),
-                                            new AuthUI.IdpConfig.TwitterBuilder().build()*/)
+                                            new AuthUI.IdpConfig.TwitterBuilder().build()))
                                     .build(),
                             RC_SIGN_IN);
                 }
@@ -149,21 +152,40 @@ public class CatalogActivity extends AppCompatActivity {
         if (mChildEventListener == null) {
             mChildEventListener = new ChildEventListener() {
                 @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
-                    Note note = dataSnapshot.getValue(Note.class);
-                    mNoteAdapter.add(note);
-                }
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {}
 
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {}
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                    Note note = dataSnapshot.getValue(Note.class);
-                    mNoteAdapter.remove(note);
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location id updated
+                    showNotes(dataSnapshot);
                 }
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
                 public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {}
                 public void onCancelled(@NonNull DatabaseError databaseError) {}
             };
             mNoteDatabaseReference.addChildEventListener(mChildEventListener);
         }
+    }
+
+    private void showNotes(DataSnapshot dataSnapshot) {
+
+        // Initialize message ListView and its adapter
+        ArrayList<Note> note = new ArrayList<>();
+        mNoteAdapter = new NoteAdapter(this, R.layout.list_item, note);
+
+        mNote = new Note();
+
+        for (DataSnapshot ds : dataSnapshot.getChildren()){
+            mNote.setTitle(ds.child("notes").getValue(Note.class).getTitle());
+            mNote.setDescription(ds.child("notes").getValue(Note.class).getDescription());
+            mNote.setColor(ds.child("notes").getValue(Note.class).getColor());
+            mNote.setTime(ds.child("notes").getValue(Note.class).getTime());
+            mNote.setIs_important(ds.child("notes").getValue(Note.class).is_important());
+            mNote.setLabel(ds.child("notes").getValue(Note.class).getLabel());
+
+            mNoteAdapter.add(mNote);
+        }
+        mNoteListView.setAdapter(mNoteAdapter);
     }
 
     private void detachDatabaseReadListener() {
@@ -173,8 +195,7 @@ public class CatalogActivity extends AppCompatActivity {
         }
     }
 
-    // todo do not want this
-    /*@Override
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
@@ -187,58 +208,12 @@ public class CatalogActivity extends AppCompatActivity {
                 finish();
             }
         }
-    }*/
+    }
 
     /**
      * Helper method to delete all notes in the database.
      */
-    private void deleteAllNotes() {
-//
-//        String[] projection = {
-//                NoteEntry._ID,
-//                NoteEntry.COLUMN_NOTE_TITLE,
-//                NoteEntry.COLUMN_NOTE_DESCRIPTION,
-//                NoteEntry.COlUMN_NOTE_COLOR
-//        };
-//
-//        // Perform a query on the provider using the ContentResolver.
-//        // Use the {@link PetEntry#CONTENT_URI} to access the pet data.
-//        Cursor cursor = getContentResolver().query(
-//                NoteEntry.CONTENT_URI,   // The content URI of the words table
-//                projection,             // The columns to return for each row
-//                null,                   // Selection criteria
-//                null,                   // Selection criteria
-//                null);                  // The sort order for the returned rows
-//
-//        if (cursor.getCount() > 0) {
-//            // Create an AlertDialog.Builder and set the message, and click listeners
-//            // for the positive and negative buttons on the dialog.
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            builder.setMessage(R.string.dialog_msg_delete_all);
-//            builder.setPositiveButton(R.string.dialog_cancel_button, new DialogInterface.OnClickListener() {
-//                public void onClick(DialogInterface dialog, int id) {
-//                    // User clicked the "Cancel" button, so dismiss the dialog
-//                    if (dialog != null) {
-//                        dialog.dismiss();
-//                    }
-//                }
-//            });
-//            builder.setNegativeButton(R.string.dialog_delete_all, new DialogInterface.OnClickListener() {
-//                public void onClick(DialogInterface dialog, int id) {
-//                    // User clicked the "Delete all notes" button
-//                    getContentResolver().delete(NoteEntry.CONTENT_URI, null, null);
-//                }
-//            });
-//
-//            // Create and show the AlertDialog
-//            AlertDialog alertDialog = builder.create();
-//            alertDialog.show();
-//        } else {
-//            Toast.makeText(this, R.string.toast_no_notes, Toast.LENGTH_SHORT).show();
-//        }
-//
-//        cursor.close();
-    }
+    private void deleteAllNotes() {}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

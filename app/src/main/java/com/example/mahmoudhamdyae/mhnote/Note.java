@@ -1,6 +1,8 @@
 package com.example.mahmoudhamdyae.mhnote;
 
 import android.graphics.Color;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public class Note {
 
