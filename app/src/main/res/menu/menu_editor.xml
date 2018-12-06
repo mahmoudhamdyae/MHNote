@@ -8,7 +8,7 @@
         android:id="@+id/action_save"
         android:icon="@drawable/ic_done_white_24dp"
         android:title="@string/action_save"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_color"
@@ -26,5 +26,5 @@
         android:id="@+id/action_alarm"
         android:icon="@drawable/ic_alarm_add_white_24dp"
         android:title="@string/action_alarm"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 </menu>

@@ -20,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,9 +31,11 @@ import java.util.List;
  */
 public class CatalogActivity extends AppCompatActivity {
 
+    String extraTitle = "";
+    String extraDescription = "";
+
     private NoteAdapter mNoteAdapter;
     private ListView mNoteListView;
-    private Note mNote;
 
     public static final int RC_SIGN_IN = 1;
 
@@ -45,7 +48,6 @@ public class CatalogActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
 
@@ -53,7 +55,15 @@ public class CatalogActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(CatalogActivity.this, EditorActivity.class));
+                // Create new intent to go to {@link EditorActivity}
+                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+
+                // todo extra String
+                intent.putExtra("noteID", "");
+                intent.putExtra("noteDescription", "");
+
+                // Launch the {@link EditorActivity} to create a new note.
+                startActivity(intent);
             }
         });
 
@@ -64,9 +74,9 @@ public class CatalogActivity extends AppCompatActivity {
         View emptyView = findViewById(R.id.empty_view);
         mNoteListView.setEmptyView(emptyView);
 
-        // Initialize message ListView and its adapter
-        List<Note> note = new ArrayList<>();
-        mNoteAdapter = new NoteAdapter(this, R.layout.list_item, note);
+        // Initialize note ListView and its adapter
+        final List<Note> notes = new ArrayList<>();
+        mNoteAdapter = new NoteAdapter(this, R.layout.list_item, notes);
         mNoteListView.setAdapter(mNoteAdapter);
 
         // Setup item click listener
@@ -76,15 +86,9 @@ public class CatalogActivity extends AppCompatActivity {
                 // Create new intent to go to {@link EditorActivity}
                 Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
 
-                // Form the content URI that represents the specific note that was clicked on,
-                // by appending the "id" (passed as input to this method) onto the
-                // P@link NoteEntry#CONTENT_URI}.
-                // For example, the URI would be "content://com.example.mahmoudhamdyae.mhnote/notes/2"
-                // If the note with ID 2 was clicked on
-//                Uri currentNoteUri = ContentUris.withAppendedId(NoteEntry.CONTENT_URI, id);
-
-                // Set the URI on the data field of the intent
-//                intent.setData(currentNoteUri);
+                // todo extra String
+                intent.putExtra("noteID", extraTitle);
+                intent.putExtra("noteDescription", extraDescription);
 
                 // Launch the {@link EditorActivity} to display the data for the current note.
                 startActivity(intent);
@@ -153,40 +157,19 @@ public class CatalogActivity extends AppCompatActivity {
         if (mChildEventListener == null) {
             mChildEventListener = new ChildEventListener() {
                 @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {}
-
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
-                    // This method is called once with the initial value and again
-                    // whenever data at this location id updated
-                    showNotes(dataSnapshot);
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
+                    Note note = dataSnapshot.getValue(Note.class);
+                    mNoteAdapter.add(note);
+                    mNoteListView.setAdapter(mNoteAdapter);
                 }
+
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {}
                 public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
                 public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {}
                 public void onCancelled(@NonNull DatabaseError databaseError) {}
             };
             mNoteDatabaseReference.addChildEventListener(mChildEventListener);
         }
-    }
-
-    private void showNotes(DataSnapshot dataSnapshot) {
-
-        // Initialize message ListView and its adapter
-        ArrayList<Note> note = new ArrayList<>();
-        mNoteAdapter = new NoteAdapter(this, R.layout.list_item, note);
-
-        mNote = new Note();
-
-        for (DataSnapshot ds : dataSnapshot.getChildren()){
-            mNote.setTitle(ds.child("notes").getValue(Note.class).getTitle());
-            mNote.setDescription(ds.child("notes").getValue(Note.class).getDescription());
-            mNote.setColor(ds.child("notes").getValue(Note.class).getColor());
-            mNote.setTime(ds.child("notes").getValue(Note.class).getTime());
-            mNote.setIs_important(ds.child("notes").getValue(Note.class).is_important());
-            mNote.setLabel(ds.child("notes").getValue(Note.class).getLabel());
-
-            mNoteAdapter.add(mNote);
-        }
-        mNoteListView.setAdapter(mNoteAdapter);
     }
 
     private void detachDatabaseReadListener() {
@@ -206,6 +189,7 @@ public class CatalogActivity extends AppCompatActivity {
             } else if (resultCode == RESULT_CANCELED) {
                 // Sign in was canceled by the user, finish the activity
                 Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+                // todo delete finish();
                 finish();
             }
         }

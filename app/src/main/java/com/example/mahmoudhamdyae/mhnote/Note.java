@@ -21,7 +21,9 @@ public class Note {
     private String label;
 
     public Note(){
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
+
     public Note(String title, String description, String color, String time, boolean is_important, String label){
         this.title = title;
         this.description = description;

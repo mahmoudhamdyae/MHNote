@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,16 +16,20 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class EditorActivity extends AppCompatActivity {
 
     /**
-     * Content URI for the existing note (null if it's a new note)
+     * Content URI for the existing note ("" if it's a new note)
      */
-    private Uri mCurrentNoteUri;
+    private String noteID = "";
 
     /**
      * EditText field to enter the note's title
@@ -69,6 +74,7 @@ public class EditorActivity extends AppCompatActivity {
     // Firebase instance variables
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mNoteDatabaseReference;
+    private FirebaseAuth mFirebaseAuth;
 
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
@@ -87,23 +93,27 @@ public class EditorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
+        // Find all relevant views that we will need to read user input from
+        mTitleEditText = findViewById(R.id.edit_title);
+        mDescriptionEditText = findViewById(R.id.edit_description);
+
         // Examine the intent that was used to launch this activity,
         // in order to figure out if we're creating a new note or editing an existing one.
         Intent intent = getIntent();
-        mCurrentNoteUri = intent.getData();
+        noteID = intent.getStringExtra("noteID");
 
         // If the intent DOES NOT contain a note content URI, then we know that we are
         // creating a new note.
-        if (mCurrentNoteUri == null) {
+        if (noteID .equals("")) {
             // This is a new Note, so change the app bar to say "Add a Note"
             setTitle(R.string.editor_activity_title_new_note);
         } else {
             // Otherwise this is an existing note, so change app bar to say "Edit Note"
             setTitle(getString(R.string.editor_activity_title_edit_note));
+
+            mTitleEditText.setText(noteID);
+            mDescriptionEditText.setText(intent.getStringExtra("noteDescription"));
         }
-        // Find all relevant views that we will need to read user input from
-        mTitleEditText = findViewById(R.id.edit_title);
-        mDescriptionEditText = findViewById(R.id.edit_description);
 
         scrollView = findViewById(R.id.edit_scroll);
 
@@ -115,6 +125,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initialize Firebase components
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseAuth = FirebaseAuth.getInstance();
 
         mNoteDatabaseReference = mFirebaseDatabase.getReference().child("notes");
     }
@@ -130,7 +141,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Check if this is supposed to be a new note
         // and check if all the fields in the editor are blank
-        if (mCurrentNoteUri == null &&
+        if (noteID.equals("") &&
                 TextUtils.isEmpty(titleString) && TextUtils.isEmpty(descriptionString)) {
             // Since no fields were modified, we can return early without creating a new note.
             // No need to create ContentValues and no need to do any ContentProvider operations.
@@ -138,9 +149,8 @@ public class EditorActivity extends AppCompatActivity {
         }
 
         // Determine if this is a new or existing note by checking if mCurrentNoteUri is null or not
-        if (mCurrentNoteUri == null) {
-            // This is a NEW Note, so insert a new Note into the provider,
-            // returning the content URI for the new Note.
+        if (noteID .equals("")) {
+            // This is a NEW Note
             Note note = new Note(mTitleEditText.getText().toString(), mDescriptionEditText.getText().toString(), color, "", false, "");
             mNoteDatabaseReference.push().setValue(note);
         } else {
@@ -167,7 +177,7 @@ public class EditorActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         // If this is a new Note, hide the "Delete" menu item.
-        if (mCurrentNoteUri == null) {
+        if (noteID.equals("")) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
             menuItem.setVisible(false);
         }
@@ -355,7 +365,7 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void deleteNote() {
         // Only perform the delete if this is an existing Note.
-        if (mCurrentNoteUri != null) {
+        if (noteID.equals("")) {
             // Call the ContentResolver to delete the Note at the given content URI.
             // Pass in null for the selection and selection args because the mCurrentNoteUri
             // content URI already identifies the Note that we want.
