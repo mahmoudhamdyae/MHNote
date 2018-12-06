@@ -34,6 +34,8 @@
     <string name="dialog_color_red">Red</string>
     <string name="dialog_color_green">Green</string>
     <string name="dialog_color_blue">Blue</string>
+    <string name="sign_in">Signed in!</string>
+    <string name="sign_in_canceled">Sign in canceled, Please connect to network</string>
 
     <!-- Authenticaion UI -->
 

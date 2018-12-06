@@ -188,8 +188,7 @@ public class CatalogActivity extends AppCompatActivity {
                 Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
                 // Sign in was canceled by the user, finish the activity
-                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
-                // todo delete finish();
+                Toast.makeText(this, "Sign in canceled, Please connect to network", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
