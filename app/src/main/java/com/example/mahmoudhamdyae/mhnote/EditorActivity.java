@@ -41,6 +41,10 @@ public class EditorActivity extends AppCompatActivity {
      */
     private EditText mDescriptionEditText;
 
+    // Read from input fields
+    String titleString;
+    String descriptionString;
+
     /**
      * ScrollView field for the color of the note
      */
@@ -127,38 +131,33 @@ public class EditorActivity extends AppCompatActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        mNoteDatabaseReference = mFirebaseDatabase.getReference().child("notes");
+        mNoteDatabaseReference = mFirebaseDatabase.getReference().child(mFirebaseAuth.getCurrentUser().getUid());
     }
 
     /**
      * Get user input from editor and save Note into database
      */
-    private void saveNote() {
-        // Read from input fields
-        // Use trim to eliminate leading or trailing white space
-        String titleString = mTitleEditText.getText().toString().trim();
-        String descriptionString = mDescriptionEditText.getText().toString().trim();
+    private void saveNote(String titleString, String descriptionString) {
 
-        // Check if this is supposed to be a new note
-        // and check if all the fields in the editor are blank
-        if (noteID.equals("") &&
-                TextUtils.isEmpty(titleString) && TextUtils.isEmpty(descriptionString)) {
-            // Since no fields were modified, we can return early without creating a new note.
-            // No need to create ContentValues and no need to do any ContentProvider operations.
-            return;
-        }
+        final Note note = new Note(titleString, descriptionString, color, "", false, "");
 
-        // Determine if this is a new or existing note by checking if mCurrentNoteUri is null or not
-        if (noteID .equals("")) {
-            // This is a NEW Note
-            Note note = new Note(mTitleEditText.getText().toString(), mDescriptionEditText.getText().toString(), color, "", false, "");
-            mNoteDatabaseReference.push().setValue(note);
-        } else {
-            if (mNoteHasChanged) {
-                // Otherwise this is an EXISTING note, so update the Note
-                // todo update firebase
+        Thread mainThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mNoteDatabaseReference.push().setValue(note).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful())
+                            // todo toast string
+                            Toast.makeText(EditorActivity.this, "Note Created Successfully", Toast.LENGTH_SHORT).show();
+                        else
+                            // todo Toast string
+                            Toast.makeText(EditorActivity.this, "Error occurred", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        }
+        });
+        mainThread.start();
     }
 
     @Override
@@ -192,7 +191,14 @@ public class EditorActivity extends AppCompatActivity {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
                 // Save Note to database
-                saveNote();
+                // todo not update
+                // Use trim to eliminate leading or trailing white space
+                titleString = mTitleEditText.getText().toString().trim();
+                descriptionString = mDescriptionEditText.getText().toString().trim();
+
+                // Check if all the fields in the editor are blank
+                if (!TextUtils.isEmpty(titleString) || !TextUtils.isEmpty(descriptionString))
+                    saveNote(titleString, descriptionString);
                 // Exit activity
                 finish();
                 return true;
