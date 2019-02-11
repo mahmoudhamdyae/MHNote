@@ -20,11 +20,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -47,6 +45,7 @@ public class CatalogActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private ChildEventListener mChildEventListener;
 
+    // todo offline
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +134,7 @@ public class CatalogActivity extends AppCompatActivity {
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 
+    // todo why empty view appears
     @Override
     protected void onPause() {
         super.onPause();
