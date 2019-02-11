@@ -131,7 +131,7 @@ public class EditorActivity extends AppCompatActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        mNoteDatabaseReference = mFirebaseDatabase.getReference().child(mFirebaseAuth.getCurrentUser().getUid());
+        mNoteDatabaseReference = mFirebaseDatabase.getReference().child("notes").child(mFirebaseAuth.getCurrentUser().getUid());
     }
 
     /**

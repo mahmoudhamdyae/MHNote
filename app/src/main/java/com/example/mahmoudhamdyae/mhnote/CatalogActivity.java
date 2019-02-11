@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -99,7 +100,7 @@ public class CatalogActivity extends AppCompatActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        mNoteDatabaseReference = mFirebaseDatabase.getReference().child("notes");
+        mNoteDatabaseReference = mFirebaseDatabase.getReference().child("notes").child(mFirebaseAuth.getCurrentUser().getUid());
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -160,9 +161,7 @@ public class CatalogActivity extends AppCompatActivity {
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
                     Note note = dataSnapshot.getValue(Note.class);
                     mNoteAdapter.add(note);
-                    mNoteListView.setAdapter(mNoteAdapter);
                 }
-
                 public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {}
                 public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
                 public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {}

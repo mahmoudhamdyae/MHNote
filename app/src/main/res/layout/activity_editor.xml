@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!--todo imeOptions-->
         <EditText
             android:id="@+id/edit_title"
             android:layout_width="match_parent"
@@ -18,6 +19,7 @@
             android:layout_margin="8dp"
             android:hint="@string/hint_title"
             android:inputType="textCapSentences|textAutoCorrect"
+            android:imeOptions="actionGo"
             android:maxLines="1" />
 
         <EditText
@@ -26,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:hint="@string/hint_description"
+            android:imeOptions="actionDone"
             android:inputType="textCapSentences|textAutoCorrect"
             android:maxLines="9" />
 
